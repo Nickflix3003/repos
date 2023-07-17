@@ -7,7 +7,7 @@ class SocialNetwork:
         # hint: look up how to use python's inbuil json module to turn objects to json
         # you can write this json unto a file on disk
         with open('data.json', 'w') as f:
-            d = json.dumps([person.to_dict() for person in self.list_of_people], indent=2, sort_keys=True)
+            d = json.dumps([person.__dict__ for person in self.list_of_people], indent=2, sort_keys=True)
             f.write(d)
         
     def reload_social_media(self):
@@ -65,7 +65,7 @@ class SocialNetwork:
         for x in range(len(self.list_of_people)):
             if self.list_of_people[x].get_name() == friend:
                 for y in range(len(self.list_of_people[x].get_blocked_list())):
-                    if self.current_person == self.list_of_people[x].get_blocked_list()[y]:
+                    if self.current_person.get_name() == self.list_of_people[x].get_blocked_list()[y]:
                         print("This person has blocked you")
                 message = self.current_person.get_name()
                 message += ": "
@@ -99,7 +99,7 @@ class Person:
 
 
     def add_friend(self, person_object):
-        self.friendlist.append(person_object)
+        self.friendlist.append(person_object.get_name())
         pass
 
     def get_name(self):
@@ -114,7 +114,7 @@ class Person:
 
     def block(self, friend):
         for x in range(len(self.friendlist)):
-            if friend == self.friendlist[x].get_name():
+            if friend == self.friendlist[x]:
                 self.blocklist.append(self.friendlist[x])
                 return True
         return False
@@ -150,8 +150,7 @@ class Person:
             for y in range(len(self.blocklist)):
                 if self.friendlist[x] == self.blocklist[y]:
                     blocked = True
-            output += self.friendlist[x].get_name()
-            output += f" age: {self.friendlist[x].get_age()}"
+            output += self.friendlist[x]
             if blocked: 
                 output += " (BLOCKED)"  
             output += "\n"
@@ -159,8 +158,8 @@ class Person:
     def view_blocked(self):
         output = "Blocked list: \n"
         for x in range(len(self.blocklist)):
-            output += self.blocklist[x].get_name()
-            output += f" age: {self.blocklist[x].get_age()}"
+            output += self.blocklist[x]
+            output += f" age: {self.blocklist[x]}"
             output += "\n"
         return output
     def view_messages(self):
